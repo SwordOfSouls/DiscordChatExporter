@@ -10,9 +10,7 @@ import java.util.stream.Collectors;
 public class HtmlReader {
     public static String read(String fileName) {
         InputStream stream =
-                HtmlReader.class.getClassLoader().getResourceAsStream("Html"+ File.separator+fileName.replace("/",
-                        File.separator) +
-                ".html");
+                ClassLoader.getSystemResourceAsStream("Html/"+ fileName + ".html");
         String output = new BufferedReader(
                 new InputStreamReader(stream, StandardCharsets.UTF_8))
                 .lines().collect(Collectors.joining("\n"));

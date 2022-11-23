@@ -7,32 +7,25 @@ public class Base extends HtmlBase {
         super(file);
     }
 
-    public Base setServerName(String name) {
+    public void setServerName(String name) {
         file.replace("SERVER_NAME", name);
-        return this;
     }
-    public Base setServerId(String serverId) {
+    public void setServerId(String serverId) {
         file.replace("GUILD_ID", serverId);
-        return this;
     }
-    public Base setServerAvatar(String url) {
+    public void setServerAvatar(String url) {
         file.replace("SERVER_AVATAR_URL", url);
-        return this;
     }
-    public Base setChannelName(String channelName) {
+    public void setChannelName(String channelName) {
         file.replace("CHANNEL_NAME", channelName);
-        return this;
     }
-    public Base setChannelCreation(String channelCreation) {
+    public void setChannelCreation(String channelCreation) {
         file.replace("CHANNEL_CREATED_AT", channelCreation);
-        return this;
     }
-    public Base setChannelTopic(String channelTopic) {
+    public void setChannelTopic(String channelTopic) {
         file.replace("CHANNEL_TOPIC", channelTopic);
-        return this;
     }
-    public Base setChannelId(String channelId) {
+    public void setChannelId(String channelId) {
         file.replace("CHANNEL_ID", channelId);
-        return this;
     }
 }
