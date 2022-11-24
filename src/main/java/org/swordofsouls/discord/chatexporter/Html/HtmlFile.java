@@ -11,7 +11,7 @@ public final class HtmlFile {
     }
 
     public HtmlFile replace(String key, String value) {
-        content = content.replaceAll("{{" + key.toUpperCase() + "}}", value);
+        content = content.replaceAll("\\{\\{" + key.toUpperCase() + "}}", value);
         return this;
     }
 }

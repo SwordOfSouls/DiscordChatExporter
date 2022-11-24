@@ -1,6 +1,6 @@
 package org.swordofsouls.discord.chatexporter.Html;
 
-import org.swordofsouls.discord.chatexporter.Html.Builders.Base;
+import org.swordofsouls.discord.chatexporter.Html.Builders.BaseBuilder;
 
 public class Html {
     public static final class Attachment {
@@ -42,7 +42,7 @@ public class Html {
         public static final String ROOT = "Message/";
 
         public static final class Bot {
-            public static final String ROOT = "Message/Bot";
+            public static final String ROOT = "Message/Bot/";
 
             public static HtmlFile TAG() { return new HtmlFile(ROOT +"tag"); }
             public static HtmlFile TAG_VERIFIED() { return new HtmlFile(ROOT +"tag_verified"); }
@@ -72,5 +72,5 @@ public class Html {
         public static HtmlFile FANCY_TIME() { return new HtmlFile(ROOT +"fancy_time"); }
     }
 
-    public static Base BASE() { return new Base(new HtmlFile("base")); }
+    public static HtmlFile BASE() { return new HtmlFile("base"); }
 }

@@ -12,4 +12,5 @@ public abstract class HtmlBase {
     public HtmlFile getFile() {
         return file;
     }
+    public abstract HtmlFile build();
 }
