@@ -15,16 +15,16 @@ body:
 
 - type: input
   attributes:
-    label: DiscordChatExporterPy Version
+    label: ChatExporter Version
     description: Which version of chat-exporter are you using?
-    placeholder: ver X.Y.Z (`pip show chat-exporter`)
+    placeholder: ver X.Y.Z
   validations:
     required: true
 
 - type: input
   attributes:
     label: Discord Version
-    description: What version of discord.py (or fork) version are you using?
+    description: What version of Javacord (or fork) version are you using?
     placeholder: discord.py ver X.Y.Z (`pip show discord.py`)
   validations:
     required: true
