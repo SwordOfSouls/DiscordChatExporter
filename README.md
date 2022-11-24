@@ -6,6 +6,7 @@
 [![GPL License][license-shield]][license-url]
 
 
+<h1>UNCOMPLETED PROJECT</h1>
   <h2>DiscordChatExporter</h2>
 
   <p>
