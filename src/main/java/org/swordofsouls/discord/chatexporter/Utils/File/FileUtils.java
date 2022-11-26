@@ -1,6 +1,5 @@
 package org.swordofsouls.discord.chatexporter.Utils.File;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class FileUtils {

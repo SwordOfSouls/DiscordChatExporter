@@ -1,7 +1,5 @@
 package org.swordofsouls.discord.chatexporter.Html.Builders.Message;
 
-import jdk.jfr.ContentType;
-import org.javacord.api.entity.Attachment;
 import org.javacord.api.entity.message.MessageAttachment;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
@@ -19,7 +17,6 @@ import org.swordofsouls.discord.chatexporter.Utils.Color.ButtonStyleUtils;
 import org.swordofsouls.discord.chatexporter.Utils.File.FileUtils;
 import org.swordofsouls.discord.chatexporter.Utils.Time.TimeUtils;
 
-import java.awt.datatransfer.MimeTypeParseException;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.List;

@@ -2,7 +2,6 @@ package org.swordofsouls.discord.chatexporter.Html.Builders;
 
 import org.swordofsouls.discord.chatexporter.Html.Html;
 import org.swordofsouls.discord.chatexporter.Html.HtmlFile;
-import org.swordofsouls.discord.chatexporter.Utils.File.FileUtils;
 import org.swordofsouls.discord.chatexporter.Utils.Time.TimeUtils;
 
 import java.time.Instant;

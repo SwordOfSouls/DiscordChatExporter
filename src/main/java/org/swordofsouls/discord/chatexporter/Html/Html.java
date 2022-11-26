@@ -1,7 +1,5 @@
 package org.swordofsouls.discord.chatexporter.Html;
 
-import org.swordofsouls.discord.chatexporter.Html.Builders.BaseBuilder;
-
 public class Html {
     public static final class Attachment {
         public static final String ROOT = "Attachment/";

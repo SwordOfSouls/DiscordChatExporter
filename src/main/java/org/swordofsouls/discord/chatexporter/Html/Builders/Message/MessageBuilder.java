@@ -1,12 +1,10 @@
 package org.swordofsouls.discord.chatexporter.Html.Builders.Message;
 
-import org.swordofsouls.discord.chatexporter.Html.Builders.HtmlBase;
 import org.swordofsouls.discord.chatexporter.Html.HtmlFile;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.TimeZone;
 
 public class MessageBuilder extends MessageCore {
     public MessageBuilder(HtmlFile file) {
