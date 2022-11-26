@@ -1,25 +1,38 @@
 package org.swordofsouls.discord.chatexporter.Html.Builders.Message;
 
+import jdk.jfr.ContentType;
+import org.javacord.api.entity.Attachment;
+import org.javacord.api.entity.message.MessageAttachment;
+import org.javacord.api.entity.message.component.ActionRow;
+import org.javacord.api.entity.message.component.Button;
+import org.javacord.api.entity.message.component.HighLevelComponent;
+import org.javacord.api.entity.message.component.LowLevelComponent;
 import org.javacord.api.entity.message.embed.Embed;
 import org.javacord.api.entity.message.embed.EmbedAuthor;
 import org.javacord.api.entity.message.embed.EmbedField;
 import org.javacord.api.entity.message.embed.EmbedFooter;
+import org.swordofsouls.discord.chatexporter.Html.Builders.Components.ButtonBuilder;
 import org.swordofsouls.discord.chatexporter.Html.Builders.HtmlBase;
 import org.swordofsouls.discord.chatexporter.Html.Html;
 import org.swordofsouls.discord.chatexporter.Html.HtmlFile;
+import org.swordofsouls.discord.chatexporter.Utils.Color.ButtonStyleUtils;
+import org.swordofsouls.discord.chatexporter.Utils.File.FileUtils;
+import org.swordofsouls.discord.chatexporter.Utils.Time.TimeUtils;
 
+import java.awt.datatransfer.MimeTypeParseException;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.List;
 
 public class MessageCore extends HtmlBase {
     public MessageCore(HtmlFile file) {
         super(file);
-        file.replace("ATTACHMENTS","");
-        file.replace("COMPONENTS","");
         file.replace("EMOJI","");
     }
 
     @Override
     public HtmlFile build() {
+        file.replace("EDIT","");
         return getFile();
     }
 
@@ -27,7 +40,9 @@ public class MessageCore extends HtmlBase {
         file.replace("MESSAGE_ID", messageId.toString());
     }
     public void setContent(String content) {
-        file.replace("MESSAGE_CONTENT", content);
+        HtmlFile messageContentLineF = Html.Message.CONTENT();
+        messageContentLineF.replace("MESSAGE_CONTENT", content);
+        file.replace("MESSAGE_CONTENT", messageContentLineF.getContent());
     }
     public void setEmbeds(List<Embed> embeds) {
         StringBuilder embedStringBuilder = new StringBuilder();
@@ -92,5 +107,78 @@ public class MessageCore extends HtmlBase {
             embedStringBuilder.append(embedF.getContent());
         }
         file.replace("EMBEDS", embedStringBuilder.toString());
+    }
+    public void setComponents(List<HighLevelComponent> components) {
+        StringBuilder componentStringBuilder = new StringBuilder();
+        for(HighLevelComponent component : components) {
+            if(component.asActionRow().isPresent()) {
+                ActionRow row = component.asActionRow().get();
+                for(LowLevelComponent lowLevelComponent : row.getComponents()) {
+                    if(lowLevelComponent.isButton() && lowLevelComponent.asButton().isPresent()) {
+                        Button button = lowLevelComponent.asButton().get();
+                        ButtonBuilder buttonBuilder = new ButtonBuilder(Html.Component.BUTTON());
+                        boolean disabled;
+                        if(button.isDisabled().isPresent()) disabled = button.isDisabled().get();
+                        else disabled = false;
+                        buttonBuilder.setColor(ButtonStyleUtils.buttonStyle(button.getStyle(), disabled));
+                        buttonBuilder.setDisabled(disabled);
+                        if(button.getLabel().isPresent()) buttonBuilder.setLabel(button.getLabel().get());
+                        if(button.getUrl().isPresent()) buttonBuilder.setUrl(button.getUrl().get());
+                        if(button.getEmoji().isPresent()) {
+                            if(button.getEmoji().get().asUnicodeEmoji().isPresent()) buttonBuilder.setEmoji(button.getEmoji().get().asUnicodeEmoji().get());
+                        }
+                        componentStringBuilder.append(buttonBuilder.build().getContent());
+                    }
+                }
+            }
+        }
+        file.replace("COMPONENTS",componentStringBuilder.toString());
+    }
+    public void setEditedTimestamp(Instant instant, ZoneId zone) {
+        HtmlFile edit = Html.Message.EDITED();
+        edit.replace("TIMESTAMP", TimeUtils.getFullFormattedTime(instant, zone));
+        file.replace("EDIT", edit.getContent());
+    }
+    public void setAttachments(List<MessageAttachment> attachments) {
+        StringBuilder attachmentBuilder = new StringBuilder();
+        for(MessageAttachment attachment : attachments) {
+            String extension = attachment.getFileName().split("\\.",2)[1];
+            String icon = FileUtils.getIcon(attachment.getFileName());
+            if(FileUtils.IMAGE_TYPES.contains(extension)) {
+                HtmlFile image = Html.Attachment.IMAGE();
+                image.replace("ATTACH_URL", attachment.getUrl().toString());
+                image.replace("ATTACH_URL_THUMB", attachment.getUrl().toString());
+                attachmentBuilder.append(image.getContent());
+                continue;
+            }
+            if(FileUtils.DOCUMENT_TYPES.contains(extension) || FileUtils.ACROBAT_TYPES.contains(extension)
+            || FileUtils.CODE_TYPES.contains(extension) || FileUtils.WEBCODE_TYPES.contains(extension)) {
+                HtmlFile image = Html.Attachment.MESSAGE();
+                image.replace("ATTACH_URL", attachment.getUrl().toString());
+                image.replace("ATTACH_BYTES",
+                        org.apache.commons.io.FileUtils.byteCountToDisplaySize(attachment.getSize()));
+                image.replace("ATTACH_FILE", attachment.getFileName());
+                image.replace("ATTACH_ICON", icon);
+                attachmentBuilder.append(image.getContent());
+                continue;
+            }
+            if(FileUtils.VIDEO_TYPES.contains(extension)) {
+                HtmlFile image = Html.Attachment.VIDEO();
+                image.replace("ATTACH_URL", attachment.getUrl().toString());
+                attachmentBuilder.append(image.getContent());
+                continue;
+            }
+            if(FileUtils.AUDIO_TYPES.contains(extension)) {
+                HtmlFile image = Html.Attachment.AUDIO();
+                image.replace("ATTACH_ICON", icon);
+                image.replace("ATTACH_URL", attachment.getUrl().toString());
+                image.replace("ATTACH_BYTES",
+                        org.apache.commons.io.FileUtils.byteCountToDisplaySize(attachment.getSize()));
+                image.replace("ATTACH_AUDIO", attachment.getUrl().toString());
+                image.replace("ATTACH_FILE", attachment.getFileName());
+                attachmentBuilder.append(image.getContent());
+            }
+        }
+        file.replace("ATTACHMENTS", attachmentBuilder.toString());
     }
 }

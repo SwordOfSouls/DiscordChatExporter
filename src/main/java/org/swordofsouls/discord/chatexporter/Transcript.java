@@ -1,6 +1,5 @@
 package org.swordofsouls.discord.chatexporter;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.javacord.api.entity.channel.ServerChannel;
@@ -19,7 +18,7 @@ import org.swordofsouls.discord.chatexporter.Html.Builders.BaseBuilder;
 import org.swordofsouls.discord.chatexporter.Utils.File.FileUtils;
 import org.swordofsouls.discord.chatexporter.Utils.Time.TimeUtils;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -27,12 +26,22 @@ import java.util.concurrent.CompletableFuture;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class Transcript {
     public final TextChannel channel;
     public final ZoneId timeZone;
 
-    public String buildTranscript() {
+    private String customCss = null;
+    private String customMedia = null;
+    private String customHeader = null;
+    private Integer overflow = 126;
+
+    public Transcript(TextChannel channel, ZoneId timeZone) {
+        this.channel = channel;
+        this.timeZone = timeZone;
+    }
+
+
+    public String build() {
         ServerChannel serverChannel = channel.asServerChannel().get();
         ServerTextChannel serverTextChannel = serverChannel.asServerTextChannel().get();
         Server server = serverChannel.getServer();
@@ -43,7 +52,6 @@ public class Transcript {
         if(server.getIcon().isPresent()) serverImage = server.getIcon().get().getUrl().toString();
         else serverImage = FileUtils.DEFAULT_AVATAR;
         String serverName = server.getName();
-        String time = LocalDateTime.now().atZone(timeZone).format(formatter);
 
         String channelCreation = serverChannel.getCreationTimestamp().atZone(timeZone).format(formatter);
         String channelTopic = serverTextChannel.getTopic();
@@ -54,9 +62,14 @@ public class Transcript {
         baseBuilder.setChannelName(serverTextChannel.getName());
         baseBuilder.setChannelCreation(channelCreation);
         baseBuilder.setChannelSubject(channelTopic);
+        baseBuilder.setCreationTime(Instant.now(), timeZone);
         baseBuilder.setChannelTopic(channelTopic);
         baseBuilder.setChannelId(serverTextChannel.getIdAsString());
+        baseBuilder.setOverflow(overflow);
 
+        if(customCss!=null) baseBuilder.setCustomCss(customCss);
+        if(customMedia!=null) baseBuilder.setCustomMediaBlock(customMedia);
+        if(customHeader!=null) baseBuilder.setCustomTop(customHeader);
 
         StringBuilder messageContent = new StringBuilder();
         CompletableFuture<MessageSet> messagePromise = serverTextChannel.getMessages(Integer.MAX_VALUE);
@@ -88,17 +101,27 @@ public class Transcript {
 
                 lastBuilder.setContent(message.getContent());
                 lastBuilder.setTimestamp(message.getCreationTimestamp(), timeZone);
+                lastBuilder.setComponents(message.getComponents());
+                lastBuilder.setAttachments(message.getAttachments());
+
+                if(message.getLastEditTimestamp().isPresent()) lastBuilder.setEditedTimestamp(message.getLastEditTimestamp().get(), timeZone);
+
                 messageContent.append(lastBuilder.build().getContent());
             } else {
                 last = message.getUserAuthor().get();
                 MessageBuilder messageBuilder = new MessageBuilder(Html.Message.MESSAGE());
-
                 messageBuilder.setContent(message.getContent());
                 messageBuilder.setMessageId(message.getId());
                 messageBuilder.setTimestamp(message.getCreationTimestamp(), timeZone);
                 messageBuilder.setEmbeds(message.getEmbeds());
-                messageContent.append(messageBuilder.getFile().getContent());
+                messageBuilder.setComponents(message.getComponents());
+                messageBuilder.setAttachments(message.getAttachments());
+
+                if(message.getLastEditTimestamp().isPresent()) messageBuilder.setEditedTimestamp(message.getLastEditTimestamp().get(), timeZone);
+
+                messageContent.append(messageBuilder.build().getContent());
             }
+
 
             if(messageUsers.containsKey(last)) messageUsers.put(last, messageUsers.get(last)+1);
             else messageUsers.put(last, 1);

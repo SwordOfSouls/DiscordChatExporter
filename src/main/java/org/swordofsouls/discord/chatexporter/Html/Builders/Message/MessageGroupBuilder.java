@@ -33,17 +33,19 @@ public class MessageGroupBuilder extends MessageCore {
         file.replace("BOT_TAG", botTag);
     }
     public void setTimestamp(Instant instant, ZoneId timeZone) {
-        file.replace("TIME", instant.atZone(timeZone).format(DateTimeFormatter.ofPattern("HH:mm a")));
+        file.replace("TIME", instant.atZone(timeZone).format(DateTimeFormatter.ofPattern("hh:mm a")));
         file.replace("TIMESTAMP", TimeUtils.getFullFormattedTime(instant, timeZone));
         file.replace("DEFAULT_TIMESTAMP",
-                instant.atZone(timeZone).format(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm a")));
+                instant.atZone(timeZone).format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a")));
     }
 
     @Override
     public HtmlFile build() {
+        super.build();
         file.replace("USER_ICON","");
         file.replace("REFERENCE","");
         file.replace("REFERENCE_SYMBOL","");
+        file.replace("USER_COLOUR","");
         return getFile();
     }
 }

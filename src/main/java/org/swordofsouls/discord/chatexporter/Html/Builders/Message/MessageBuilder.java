@@ -14,8 +14,8 @@ public class MessageBuilder extends MessageCore {
     }
 
     public void setTimestamp(Instant instant, ZoneId timeZone) {
-        file.replace("TIME", instant.atZone(timeZone).format(DateTimeFormatter.ofPattern("HH:mm a")));
-        file.replace("TIMESTAMP", instant.atZone(timeZone).format(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm a")));
+        file.replace("TIME", instant.atZone(timeZone).format(DateTimeFormatter.ofPattern("hh:mm a")));
+        file.replace("TIMESTAMP", instant.atZone(timeZone).format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a")));
     }
 
 }

@@ -903,7 +903,8 @@ If you have any issues or suggestions - open an issue on the Github Repository o
         .main {
             display: flex;
             overflow-y: auto;
-            height: calc(100% - 126px);
+            /*height: calc(100% - 126px);*/
+            height: calc(100% - {{OVERFLOW}}px);
             flex-direction: column;
         }
 
@@ -957,7 +958,7 @@ If you have any issues or suggestions - open an issue on the Github Repository o
             display: flex;
             align-items: center;
             height: 20px;
-            border-radius: 5px;
+            border-radius: 5px 0 0 0;
             margin: 0 16px 24px;
             padding: 16px;
             width: calc(100% - 50px);
@@ -1247,6 +1248,16 @@ If you have any issues or suggestions - open an issue on the Github Repository o
 
         .cursor_pointer { cursor: pointer; }
 
+
+        {{CSS}}
+
+        @media only screen and (max-width : 750px){
+            .panel__channel-topic {
+                display: none;
+            }
+
+            {{MEDIA_BLOCK}}
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/solarized-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
@@ -1256,9 +1267,6 @@ If you have any issues or suggestions - open an issue on the Github Repository o
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/timezone.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/utc.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.5/plugin/customParseFormat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.5/plugin/isToday.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.5/plugin/isTomorrow.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.5/plugin/isBetween.js"></script>
 
     <script>
         <!--  Scroll to Message (References)  -->
@@ -1326,6 +1334,8 @@ If you have any issues or suggestions - open an issue on the Github Repository o
 </head>
 <body>
 
+{{INSERT_TOP}}
+
 <div class="panel">
     <img class="panel__hashtag-icon" src="https://cdn.jsdelivr.net/gh/mahtoid/DiscordUtils@master/discord-hashtag.svg"/>
     <span>{{CHANNEL_NAME}}</span>
@@ -1336,6 +1346,8 @@ If you have any issues or suggestions - open an issue on the Github Repository o
         <span>Summary</span>
     </div>
 </div>
+
+{{INSERT_PANEL}}
 
 <div class="main">
     <div class="buffer">
@@ -1350,6 +1362,7 @@ If you have any issues or suggestions - open an issue on the Github Repository o
     <div class="chatlog">
         {{MESSAGES}}
     </div>
+</div>
 </div>
 
 <div class="footer">

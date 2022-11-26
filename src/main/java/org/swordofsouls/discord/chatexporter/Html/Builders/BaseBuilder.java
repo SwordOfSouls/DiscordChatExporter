@@ -2,6 +2,11 @@ package org.swordofsouls.discord.chatexporter.Html.Builders;
 
 import org.swordofsouls.discord.chatexporter.Html.Html;
 import org.swordofsouls.discord.chatexporter.Html.HtmlFile;
+import org.swordofsouls.discord.chatexporter.Utils.File.FileUtils;
+import org.swordofsouls.discord.chatexporter.Utils.Time.TimeUtils;
+
+import java.time.Instant;
+import java.time.ZoneId;
 
 public class BaseBuilder extends HtmlBase {
     public BaseBuilder(HtmlFile file) {
@@ -11,6 +16,10 @@ public class BaseBuilder extends HtmlBase {
     @Override
     public HtmlFile build() {
         file.replace("SD", "");
+        file.replace("CSS", "");
+        file.replace("MEDIA_BLOCK", "");
+        file.replace("INSERT_TOP", "");
+        file.replace("INSERT_PANEL", "");
         return getFile();
     }
 
@@ -50,4 +59,23 @@ public class BaseBuilder extends HtmlBase {
     public void setMetaData(String metaData) {
         file.replace("META_DATA", metaData);
     }
+    public void setCustomCss(String css) {
+        file.replace("CSS", css);
+    }
+    public void setCustomMediaBlock(String mediaBlock) {
+        file.replace("MEDIA_BLOCK", mediaBlock);
+    }
+    public void setCustomTop(String htmlTop) {
+        file.replace("INSERT_TOP", htmlTop);
+    }
+    public void setCustomMiddle(String htmlMiddle) {
+        file.replace("INSERT_PANEL", htmlMiddle);
+    }
+    public void setCreationTime(Instant instant, ZoneId zone) {
+        file.replace("DATE_TIME", TimeUtils.getFullFormattedTime(instant, zone));
+    }
+    public void setOverflow(Integer overflow) {
+        file.replace("OVERFLOW", String.valueOf(overflow));
+    }
+
 }

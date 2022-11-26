@@ -57,6 +57,7 @@ public class Html {
         public static HtmlFile REFERENCE_UNKNOWN() { return new HtmlFile(ROOT +"reference_unknown"); }
         public static HtmlFile START() { return new HtmlFile(ROOT +"start"); }
         public static HtmlFile THREAD() { return new HtmlFile(ROOT +"thread"); }
+        public static HtmlFile EDITED() { return new HtmlFile(ROOT +"edited"); }
     }
     public static final class Reaction {
         public static final String ROOT = "Reaction/";

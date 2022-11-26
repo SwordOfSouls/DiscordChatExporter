@@ -12,7 +12,7 @@ public class TimeUtils {
                 instant.atZone(zoneId).getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US) + ", " +
                 instant.atZone(zoneId).getMonth().getDisplayName(TextStyle.FULL, Locale.US) + " " +
                 mapInt(instant.atZone(zoneId).getDayOfMonth(), 2) + ", " + instant.atZone(zoneId).getYear() +
-                instant.atZone(zoneId).format(DateTimeFormatter.ofPattern(" HH:mm a"));
+                instant.atZone(zoneId).format(DateTimeFormatter.ofPattern(" hh:mm a"));
     }
     public static String getFormattedTime(Instant instant, ZoneId zoneId) {
         return
