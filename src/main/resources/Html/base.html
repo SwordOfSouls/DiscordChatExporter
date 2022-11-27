@@ -940,7 +940,7 @@ If you have any issues or suggestions - open an issue on the Github Repository o
         .info__title {
             font-size: 2vh;
             font-weight: 500;
-            line-height: 40px;
+            line-height: 2vh;
         }
 
         .info__subject {
@@ -1249,6 +1249,10 @@ If you have any issues or suggestions - open an issue on the Github Repository o
 
         .cursor_pointer { cursor: pointer; }
 
+        .panel__channel-name {
+            font-size: 1.6vh;
+        }
+
 
         {{CSS}}
 
@@ -1339,7 +1343,7 @@ If you have any issues or suggestions - open an issue on the Github Repository o
 
 <div class="panel">
     <img class="panel__hashtag-icon" src="https://cdn.jsdelivr.net/gh/mahtoid/DiscordUtils@master/discord-hashtag.svg"/>
-    <span>{{CHANNEL_NAME}}</span>
+    <span class="panel__channel-name">{{CHANNEL_NAME}}</span>
 
     {{CHANNEL_TOPIC}}
 
