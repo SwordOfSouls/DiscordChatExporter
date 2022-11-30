@@ -45,9 +45,15 @@ public class MessageCore extends HtmlBase {
         StringBuilder embedStringBuilder = new StringBuilder();
         for(Embed embed : embeds) {
             HtmlFile embedF = Html.Embed.BODY();
-            embedF.replace("EMBED_R", String.valueOf(embed.getColor().get().getRed()));
-            embedF.replace("EMBED_G", String.valueOf(embed.getColor().get().getGreen()));
-            embedF.replace("EMBED_B", String.valueOf(embed.getColor().get().getBlue()));
+            if(embed.getColor().isPresent()) {
+                embedF.replace("EMBED_R", String.valueOf(embed.getColor().get().getRed()));
+                embedF.replace("EMBED_G", String.valueOf(embed.getColor().get().getGreen()));
+                embedF.replace("EMBED_B", String.valueOf(embed.getColor().get().getBlue()));
+            } else {
+                embedF.replace("EMBED_R", "40");
+                embedF.replace("EMBED_G", "40");
+                embedF.replace("EMBED_B", "40");
+            }
             if (embed.getAuthor().isPresent()) {
                 EmbedAuthor author = embed.getAuthor().get();
                 HtmlFile embedAuthorF = Html.Embed.AUTHOR();
