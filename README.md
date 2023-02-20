@@ -10,7 +10,7 @@
   <h2>DiscordChatExporter</h2>
 
   <p>
-    Export Discord chats with your Javacord
+    Export Discord chats with your Javacord bot
     <a href="https://github.com/SwordOfSouls/DiscordChatExporter/issues/new?assignees=&labels=bug&template=bug-report.yml">Report Bug</a>
     ·
     <a href="https://github.com/SwordOfSouls/DiscordChatExporter/issues/new?assignees=&labels=enhancement&template=feature-request.yml">Request Feature</a>
