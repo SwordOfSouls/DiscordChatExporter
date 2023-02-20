@@ -19,9 +19,17 @@ public class BaseBuilder extends HtmlBase {
         file.replace("MEDIA_BLOCK", "");
         file.replace("INSERT_TOP", "");
         file.replace("INSERT_PANEL", "");
+        file.replace("TITLE", "");
+        file.replace("FAVICON", "");
         return getFile();
     }
 
+    public void setTitle(String name) {
+        file.replace("TITLE", name);
+    }
+    public void setFavicon(String favicon) {
+        file.replace("FAVICON", favicon);
+    }
     public void setServerName(String name) {
         file.replace("SERVER_NAME", name);
     }

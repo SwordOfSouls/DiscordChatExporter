@@ -36,10 +36,14 @@ public class Transcript {
     private String customCss = null;
     private String customMedia = null;
     private String customHeader = null;
+    private String title = null;
+    @Setter
+    private String favicon = "";
     private Integer overflow = 126;
 
-    public Transcript(TextChannel channel, ZoneId timeZone) {
+    public Transcript(String title, TextChannel channel, ZoneId timeZone) {
         this.channel = channel;
+        this.title = title;
         this.timeZone = timeZone;
     }
 
@@ -59,6 +63,8 @@ public class Transcript {
         String channelCreation = serverChannel.getCreationTimestamp().atZone(timeZone).format(formatter);
         String channelTopic = serverTextChannel.getTopic();
 
+        baseBuilder.setTitle(title);
+        baseBuilder.setFavicon(favicon);
         baseBuilder.setServerName(serverName);
         baseBuilder.setServerId(server.getIdAsString());
         baseBuilder.setServerAvatar(serverImage);
