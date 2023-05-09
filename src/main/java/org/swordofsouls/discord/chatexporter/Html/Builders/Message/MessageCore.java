@@ -83,11 +83,12 @@ public class MessageCore extends HtmlBase {
             }
             embedF.replace("EMBED_FIELDS", embedsBuilder.toString());
 
-            if (embed.getImage().isPresent()) embedF.replace("EMBED_IMAGE", embed.getImage().get().getUrl().toString());
+            if (embed.getImage().isPresent()) embedF.replace("EMBED_IMAGE",
+                    Html.Embed.IMAGE().replace("EMBED_IMAGE",embed.getImage().get().getUrl().toString()).getContent());
             else embedF.replace("EMBED_IMAGE", "");
 
             if (embed.getThumbnail().isPresent()) embedF.replace("EMBED_THUMBNAIL",
-                    embed.getThumbnail().get().getUrl().toString());
+                    Html.Embed.THUMBNAIL().replace("EMBED_THUMBNAIL",embed.getImage().get().getUrl().toString()).getContent());
             else embedF.replace("EMBED_THUMBNAIL", "");
 
             if (embed.getFooter().isPresent()) {
