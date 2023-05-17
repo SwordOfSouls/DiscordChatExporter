@@ -56,9 +56,16 @@ public class MessageCore extends HtmlBase {
             }
             if (embed.getAuthor().isPresent()) {
                 EmbedAuthor author = embed.getAuthor().get();
-                HtmlFile embedAuthorF = Html.Embed.AUTHOR();
-                embedAuthorF.replace("AUTHOR", author.getName());
-                embedF.replace("EMBED_AUTHOR", embedAuthorF.getContent());
+                if(!author.getIconUrl().isPresent()) {
+                    HtmlFile embedAuthorF = Html.Embed.AUTHOR();
+                    embedAuthorF.replace("AUTHOR", author.getName());
+                    embedF.replace("EMBED_AUTHOR", embedAuthorF.getContent());
+                } else {
+                    HtmlFile embedAuthorF = Html.Embed.AUTHOR_ICON();
+                    embedAuthorF.replace("AUTHOR", author.getName());
+                    embedAuthorF.replace("AUTHOR_ICON", author.getIconUrl().get().toString());
+                    embedF.replace("EMBED_AUTHOR", embedAuthorF.getContent());
+                }
             }
             else embedF.replace("EMBED_AUTHOR", "");
             if (embed.getTitle().isPresent()) embedF.replace("EMBED_TITLE", Html.Embed.TITLE().replace("EMBED_TITLE",
@@ -88,7 +95,7 @@ public class MessageCore extends HtmlBase {
             else embedF.replace("EMBED_IMAGE", "");
 
             if (embed.getThumbnail().isPresent()) embedF.replace("EMBED_THUMBNAIL",
-                    Html.Embed.THUMBNAIL().replace("EMBED_THUMBNAIL",embed.getImage().get().getUrl().toString()).getContent());
+                    Html.Embed.THUMBNAIL().replace("EMBED_THUMBNAIL",embed.getThumbnail().get().getUrl().toString()).getContent());
             else embedF.replace("EMBED_THUMBNAIL", "");
 
             if (embed.getFooter().isPresent()) {

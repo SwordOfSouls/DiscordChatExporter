@@ -26,6 +26,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Getter
 @Setter
@@ -161,6 +165,18 @@ public class Transcript {
 
         baseBuilder.setMetaData(metaContentBuilder.toString());
 
-        return baseBuilder.build().getContent();
+        String content = baseBuilder.build().getContent();
+        Pattern pattern = Pattern.compile("&lt;:.*?:(\\d*)&gt;");
+        HashMap<Pattern, String> patterns = new HashMap<>();
+        patterns.put(pattern, "<img class=\"emoji emoji--small\" src=\"https://cdn.discordapp.com/emojis/%s.png\">");
+        Matcher matcher = pattern.matcher(content);
+
+        while(matcher.find()) {
+            matcher.replaceAll((matchResult -> {
+                String emojiId = matchResult.group(1);
+                return String.format(patterns.get(pattern), emojiId);
+            }));
+        }
+        return content;
     }
 }
