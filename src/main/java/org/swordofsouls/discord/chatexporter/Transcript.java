@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 @Setter
 public class Transcript {
     public final TextChannel channel;
+    public final List<Message> messages;
     public final ZoneId timeZone;
 
     private String customCss = null;
@@ -49,6 +50,15 @@ public class Transcript {
         this.channel = channel;
         this.title = title;
         this.timeZone = timeZone;
+        CompletableFuture<MessageSet> messagePromise = channel.getMessages(Integer.MAX_VALUE);
+        MessageSet messageSet = messagePromise.join();
+        messages = new ArrayList<>(messageSet);
+    }
+    public Transcript(String title, TextChannel channel, List<Message> messages, ZoneId timeZone) {
+        this.channel = channel;
+        this.title = title;
+        this.timeZone = timeZone;
+        this.messages = messages;
     }
 
 
@@ -85,14 +95,11 @@ public class Transcript {
         if(customHeader!=null) baseBuilder.setCustomTop(customHeader);
 
         StringBuilder messageContent = new StringBuilder();
-        CompletableFuture<MessageSet> messagePromise = serverTextChannel.getMessages(Integer.MAX_VALUE);
-        MessageSet messageSet = messagePromise.join();
-        List<Message> messageList = new ArrayList<>(messageSet);
         Map<User, Integer> messageUsers = new HashMap<>();
 
         User last = null;
         MessageGroupBuilder lastBuilder = null;
-        for (Message message : messageList) {
+        for (Message message : messages) {
             if(last == null || (last.getId() != message.getUserAuthor().get().getId())) {
                 if(lastBuilder!=null) messageContent.append(Html.Message.END().getContent());
                 last = message.getUserAuthor().get();
@@ -139,7 +146,7 @@ public class Transcript {
             if(messageUsers.containsKey(last)) messageUsers.put(last, messageUsers.get(last)+1);
             else messageUsers.put(last, 1);
         }
-        baseBuilder.setMessageCount(messageList.size());
+        baseBuilder.setMessageCount(messages.size());
         baseBuilder.setMessageParticipants(messageUsers.size());
         baseBuilder.setMessages(messageContent.toString());
 
