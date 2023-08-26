@@ -35,10 +35,10 @@ public class SerializableMessage {
     protected long messageId;
     protected long authorId;
     protected SerializableInstant creationStamp;
-    protected Optional<SerializableInstant> lastEditStamp;
+    protected SerializableOptional<SerializableInstant> lastEditStamp;
     protected List<Embed> embeds = new ArrayList<>();
     protected boolean tts = false;
-    protected Optional<String> nonce;
+    protected SerializableOptional<String> nonce;
     protected final List<SerializableAttachment> attachments = new ArrayList<>();
     protected final List<HighLevelComponent> components = new ArrayList<>();
     protected Set<Long> stickerIds = new HashSet<>();
@@ -58,12 +58,12 @@ public class SerializableMessage {
 
         this.embeds.addAll(message.getEmbeds());
         this.tts = message.isTts();
-        this.nonce = message.getNonce();
+        this.nonce = new SerializableOptional<>(message.getNonce());
         this.content = message.getContent();
         this.messageId = message.getId();
         this.authorId = message.getUserAuthor().get().getId();
         this.creationStamp = new SerializableInstant(message.getCreationTimestamp());
-        if(message.getLastEditTimestamp().isPresent()) this.lastEditStamp = Optional.of(new SerializableInstant(message.getLastEditTimestamp().get()));
-        else this.lastEditStamp = Optional.empty();
+        if(message.getLastEditTimestamp().isPresent()) this.lastEditStamp = new SerializableOptional<>(Optional.of(new SerializableInstant(message.getLastEditTimestamp().get())));
+        else this.lastEditStamp = SerializableOptional.empty();
     }
 }
