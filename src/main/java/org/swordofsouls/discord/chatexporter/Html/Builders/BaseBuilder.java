@@ -21,8 +21,6 @@ public class BaseBuilder extends HtmlBase {
         file.replace("INSERT_PANEL", "");
         file.replace("TITLE", "");
         file.replace("FAVICON", "");
-        file.replace("SUBJECT", Html.Script.CHANNEL_SUBJECT().replace("RAW_CHANNEL_TOPIC", " ").getContent());
-        file.replace("CHANNEL_TOPIC", Html.Script.CHANNEL_TOPIC().replace("CHANNEL_TOPIC", " ").getContent());
         return getFile();
     }
 

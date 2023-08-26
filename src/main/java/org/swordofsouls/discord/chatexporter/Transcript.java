@@ -82,9 +82,12 @@ public class Transcript {
         baseBuilder.setServerAvatar(serverImage);
         baseBuilder.setChannelName(serverChannel.getName());
         baseBuilder.setChannelCreation(channelCreation);
-        serverChannel.asServerTextChannel().ifPresent(serverTextChannel -> {
+        serverChannel.asServerTextChannel().ifPresentOrElse((serverTextChannel -> {
             baseBuilder.setChannelSubject(serverTextChannel.getTopic());
             baseBuilder.setChannelTopic(serverTextChannel.getTopic());
+        }), () -> {
+            baseBuilder.setChannelSubject("⠀");
+            baseBuilder.setChannelTopic("⠀");
         });
         baseBuilder.setCreationTime(Instant.now(), timeZone);
         baseBuilder.setChannelId(serverChannel.getIdAsString());
