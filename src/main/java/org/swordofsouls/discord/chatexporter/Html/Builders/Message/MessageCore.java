@@ -13,6 +13,7 @@ import org.swordofsouls.discord.chatexporter.Html.Builders.Components.ButtonBuil
 import org.swordofsouls.discord.chatexporter.Html.Builders.HtmlBase;
 import org.swordofsouls.discord.chatexporter.Html.Html;
 import org.swordofsouls.discord.chatexporter.Html.HtmlFile;
+import org.swordofsouls.discord.chatexporter.Serializable.SerializableAttachment;
 import org.swordofsouls.discord.chatexporter.Utils.Color.ButtonStyleUtils;
 import org.swordofsouls.discord.chatexporter.Utils.File.FileUtils;
 import org.swordofsouls.discord.chatexporter.Utils.Time.TimeUtils;
@@ -150,9 +151,9 @@ public class MessageCore extends HtmlBase {
         edit.replace("TIMESTAMP", TimeUtils.getFullFormattedTime(instant, zone));
         file.replace("EDIT", edit.getContent());
     }
-    public void setAttachments(List<MessageAttachment> attachments) {
+    public void setAttachments(List<SerializableAttachment> attachments) {
         StringBuilder attachmentBuilder = new StringBuilder();
-        for(MessageAttachment attachment : attachments) {
+        for(SerializableAttachment attachment : attachments) {
             String extension = attachment.getFileName().split("\\.",2)[1];
             String icon = FileUtils.getIcon(attachment.getFileName());
             if(FileUtils.IMAGE_TYPES.contains(extension)) {

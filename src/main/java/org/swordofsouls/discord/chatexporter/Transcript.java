@@ -2,6 +2,7 @@ package org.swordofsouls.discord.chatexporter;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.javacord.api.DiscordApi;
 import org.javacord.api.entity.channel.ServerChannel;
 import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.channel.TextChannel;
@@ -10,11 +11,13 @@ import org.javacord.api.entity.message.MessageSet;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.entity.user.UserFlag;
+import org.javacord.core.entity.message.MessageSetImpl;
 import org.swordofsouls.discord.chatexporter.Html.Builders.BaseBuilder;
 import org.swordofsouls.discord.chatexporter.Html.Builders.Message.MessageBuilder;
 import org.swordofsouls.discord.chatexporter.Html.Builders.Message.MessageGroupBuilder;
 import org.swordofsouls.discord.chatexporter.Html.Builders.MetaBuilder;
 import org.swordofsouls.discord.chatexporter.Html.Html;
+import org.swordofsouls.discord.chatexporter.Serializable.SerializableMessage;
 import org.swordofsouls.discord.chatexporter.Utils.File.FileUtils;
 import org.swordofsouls.discord.chatexporter.Utils.Time.TimeUtils;
 
@@ -35,7 +38,7 @@ import java.util.regex.Pattern;
 @Setter
 public class Transcript {
     public final TextChannel channel;
-    public final List<Message> messages;
+    public final List<SerializableMessage> messages;
     public final ZoneId timeZone;
 
     private String customCss = null;
@@ -50,11 +53,12 @@ public class Transcript {
         this.channel = channel;
         this.title = title;
         this.timeZone = timeZone;
+        messages = new ArrayList<>();
         CompletableFuture<MessageSet> messagePromise = channel.getMessages(Integer.MAX_VALUE);
         MessageSet messageSet = messagePromise.join();
-        messages = new ArrayList<>(messageSet);
+        messageSet.forEach(message -> messages.add(new SerializableMessage(message)));
     }
-    public Transcript(String title, TextChannel channel, List<Message> messages, ZoneId timeZone) {
+    public Transcript(String title, TextChannel channel, List<SerializableMessage> messages, ZoneId timeZone) {
         this.channel = channel;
         this.title = title;
         this.timeZone = timeZone;
@@ -62,7 +66,7 @@ public class Transcript {
     }
 
 
-    public String build() {
+    public String build(DiscordApi discordApi) {
         ServerChannel serverChannel = channel.asServerChannel().get();
         ServerTextChannel serverTextChannel = serverChannel.asServerTextChannel().get();
         Server server = serverChannel.getServer();
@@ -99,15 +103,15 @@ public class Transcript {
 
         User last = null;
         MessageGroupBuilder lastBuilder = null;
-        for (Message message : messages) {
-            if(last == null || (last.getId() != message.getUserAuthor().get().getId())) {
+        for (SerializableMessage message : messages) {
+            if(last == null || (last.getId() != message.getAuthorId())) {
                 if(lastBuilder!=null) messageContent.append(Html.Message.END().getContent());
-                last = message.getUserAuthor().get();
+                last = discordApi.getUserById(message.getAuthorId()).join();
 
                 lastBuilder = new MessageGroupBuilder(Html.Message.START());
                 lastBuilder.setAvatar(last.getAvatar().getUrl().toString());
                 lastBuilder.setUserId(last.getId());
-                lastBuilder.setMessageId(message.getId());
+                lastBuilder.setMessageId(message.getMessageId());
                 lastBuilder.setUserName(last.getName());
                 lastBuilder.setEmbeds(message.getEmbeds());
 
@@ -120,24 +124,24 @@ public class Transcript {
                 if(last.getRoleColor(server).isPresent()) lastBuilder.setUserColor(last.getRoleColor(server).get());
 
                 lastBuilder.setContent(message.getContent());
-                lastBuilder.setTimestamp(message.getCreationTimestamp(), timeZone);
+                lastBuilder.setTimestamp(message.getCreationStamp(), timeZone);
                 lastBuilder.setComponents(message.getComponents());
                 lastBuilder.setAttachments(message.getAttachments());
 
-                if(message.getLastEditTimestamp().isPresent()) lastBuilder.setEditedTimestamp(message.getLastEditTimestamp().get(), timeZone);
+                if(message.getLastEditStamp().isPresent()) lastBuilder.setEditedTimestamp(message.getLastEditStamp().get(), timeZone);
 
                 messageContent.append(lastBuilder.build().getContent());
             } else {
-                last = message.getUserAuthor().get();
+                last = discordApi.getUserById(message.getAuthorId()).join();
                 MessageBuilder messageBuilder = new MessageBuilder(Html.Message.MESSAGE());
                 messageBuilder.setContent(message.getContent());
-                messageBuilder.setMessageId(message.getId());
-                messageBuilder.setTimestamp(message.getCreationTimestamp(), timeZone);
+                messageBuilder.setMessageId(message.getMessageId());
+                messageBuilder.setTimestamp(message.getCreationStamp(), timeZone);
                 messageBuilder.setEmbeds(message.getEmbeds());
                 messageBuilder.setComponents(message.getComponents());
                 messageBuilder.setAttachments(message.getAttachments());
 
-                if(message.getLastEditTimestamp().isPresent()) messageBuilder.setEditedTimestamp(message.getLastEditTimestamp().get(), timeZone);
+                if(message.getLastEditStamp().isPresent()) messageBuilder.setEditedTimestamp(message.getLastEditStamp().get(), timeZone);
 
                 messageContent.append(messageBuilder.build().getContent());
             }
@@ -179,7 +183,7 @@ public class Transcript {
         Matcher matcher = pattern.matcher(content);
 
         while(matcher.find()) {
-            matcher.replaceAll((matchResult -> {
+            content = matcher.replaceAll((matchResult -> {
                 String emojiId = matchResult.group(1);
                 return String.format(patterns.get(pattern), emojiId);
             }));
