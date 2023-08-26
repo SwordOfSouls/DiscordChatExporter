@@ -18,25 +18,31 @@
 </div>
 
 ---
+
 ## Installation
 
-
 ---
-## Usage
 
+## Usage
 
 ## Screenshots
 
-
 ## Additional Functions
 
-
 <!-- LINK DUMP -->
+
 [language-dom]: https://img.shields.io/github/languages/top/SwordOfSouls/DiscordChatExporter?style=for-the-badge
+
 [stars-shield]: https://img.shields.io/github/stars/SwordOfSouls/DiscordChatExporter?style=for-the-badge
+
 [stars-url]: https://github.com/SwordOfSouls/DiscordChatExporter/stargazers
+
 [issues-shield]: https://img.shields.io/github/issues/SwordOfSouls/DiscordChatExporter?style=for-the-badge
+
 [issues-url]: https://github.com/SwordOfSouls/DiscordChatExporter/issues
+
 [license-shield]: https://img.shields.io/github/license/SwordOfSouls/DiscordChatExporter?style=for-the-badge
+
 [license-url]: https://github.com/SwordOfSouls/DiscordChatExporter/blob/master/LICENSE
+
 [github-url]: https://github.com/SwordOfSouls/DiscordChatExporter/

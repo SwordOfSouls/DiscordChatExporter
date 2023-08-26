@@ -1,11 +1,8 @@
 package org.swordofsouls.discord.chatexporter.Serializable;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.JsonSerializable;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.javacord.api.entity.message.component.ComponentType;
 import org.javacord.api.entity.message.component.HighLevelComponent;
 import org.javacord.api.entity.message.component.LowLevelComponent;
@@ -54,8 +51,7 @@ public class SerializableHighLevelComponent {
                 case SELECT_MENU_MENTIONABLE:
                 case SELECT_MENU_ROLE:
                 case SELECT_MENU_STRING:
-                case SELECT_MENU_USER:
-                {
+                case SELECT_MENU_USER: {
                     components.add(new SelectMenuImpl(jsonNode));
                     break;
                 }

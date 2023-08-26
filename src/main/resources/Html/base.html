@@ -3,9 +3,9 @@
 
 <head>
     <title>{{TITLE}}</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/x-icon" href="{{FAVICON}}">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta content="width=device-width" name="viewport"/>
+    <link href="{{FAVICON}}" rel="icon" type="image/x-icon">
 
     <style>
         @font-face {
@@ -685,7 +685,7 @@
             height: 100%;
             width: 100%;
             background-color: #36393f;
-            font-family: "Whitney",serif;
+            font-family: "Whitney", serif;
             font-size: 17px;
             color: #fff;
             margin: 0;
@@ -886,9 +886,8 @@
             position: absolute;
             z-index: 6969;
             background-color: #36393f;
-            box-shadow:
-                    0 2px 10px 0 rgb(0 0 0 / 20%),
-                    0 0 0 1px rgb(32 34 37 / 60%);
+            box-shadow: 0 2px 10px 0 rgb(0 0 0 / 20%),
+            0 0 0 1px rgb(32 34 37 / 60%);
             width: 250px;
             border-radius: 5px;
             overflow: hidden;
@@ -900,13 +899,15 @@
             display: flex;
             overflow-y: auto;
             /*height: calc(100% - 126px);*/
-            height: calc(100% - {{OVERFLOW}}px);
-            flex-direction: column;
+            height: calc(100% - {{OVERFLOW
+        }
+        } px);
+        flex-direction: column;
         }
 
         .main::-webkit-scrollbar {
             width: 8px;
-            background-color: rgba(0,0,0,0);
+            background-color: rgba(0, 0, 0, 0);
         }
 
         /* Add a thumb */
@@ -1012,9 +1013,8 @@
             position: absolute;
             z-index: 6969;
             background-color: #292b2f;
-            box-shadow:
-                    0 2px 10px 0 rgb(0 0 0 / 20%),
-                    0 0 0 1px rgb(32 34 37 / 60%);
+            box-shadow: 0 2px 10px 0 rgb(0 0 0 / 20%),
+            0 0 0 1px rgb(32 34 37 / 60%);
             width: 280px;
             border-radius: 5px;
             overflow: hidden;
@@ -1207,7 +1207,7 @@
             margin-top: -0.7px;
             background-color: #2F3136;
             border: 1px solid #202225;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
         }
 
         .dropdownContentEmoji {
@@ -1239,29 +1239,48 @@
             border-bottom-right-radius: 0px;
         }
 
-        .dropdownContentDesc { color: #999B9E; }
-        .dropdownButton:hover { border: 1px solid #040405; }
-        .chatlog__component-dropdown-show { display: block; }
-        .chatlog__component-dropdown a:hover { background-color: #292B2F; }
+        .dropdownContentDesc {
+            color: #999B9E;
+        }
 
-        .cursor_pointer { cursor: pointer; }
+        .dropdownButton:hover {
+            border: 1px solid #040405;
+        }
+
+        .chatlog__component-dropdown-show {
+            display: block;
+        }
+
+        .chatlog__component-dropdown a:hover {
+            background-color: #292B2F;
+        }
+
+        .cursor_pointer {
+            cursor: pointer;
+        }
 
         .panel__channel-name {
             font-size: 1.6vh;
         }
 
 
-        {{CSS}}
+        {
+        {
+            CSS
+        }
+        }
 
-        @media only screen and (max-width : 750px){
+        @media only screen and (max-width: 750px) {
             .panel__channel-topic {
                 display: none;
-            }
-
-            {{MEDIA_BLOCK}}
+            } { {
+            MEDIA_BLOCK
+        }
+        }
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/solarized-dark.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/solarized-dark.min.css"
+          rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
     <script src="https://unpkg.com/@popperjs/core@2.11.5/dist/umd/popper.min.js"></script>
     <script src="https://unpkg.com/tippy.js@6.3.7/dist/tippy-bundle.umd.min.js"></script>
@@ -1271,7 +1290,10 @@
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.5/plugin/customParseFormat.js"></script>
 
     <script>
-        <!--  Scroll to Message (References)  -->
+        <!--
+        Scroll
+        to
+        Message(References)  -->
         function scrollToMessage(event, id) {
             var element = document.getElementById('message-' + id);
 
@@ -1285,7 +1307,7 @@
                     behavior: 'smooth'
                 });
 
-                window.setTimeout(function() {
+                window.setTimeout(function () {
                     element.classList.remove('chatlog__message-container--highlighted');
                 }, 2000);
             }
@@ -1304,7 +1326,7 @@
                     behavior: 'smooth'
                 });
 
-                window.setTimeout(function() {
+                window.setTimeout(function () {
                     element.classList.remove('chatlog__message--highlighted');
                 }, 2000);
             }
@@ -1375,9 +1397,9 @@
     <div class="item">Copy Message ID</div>
 </div>
 
-<div id="summary-popout" class="summary-popout">
+<div class="summary-popout" id="summary-popout">
     <div class="meta__header">
-        <img src="{{SERVER_AVATAR_URL}}" alt="Avatar">
+        <img alt="Avatar" src="{{SERVER_AVATAR_URL}}">
     </div>
     <div class="meta__description">
         <div class="meta__details">
@@ -1409,7 +1431,10 @@
 {{META_DATA}}
 
 <script>
-    <!-- Right Click - Copy ID -->
+    <!--
+    Right
+    Click - Copy
+    ID -->
     let metaPopout = undefined
     const contextMenu = document.getElementById("context-menu");
     const scope = document.querySelector("body");
@@ -1446,7 +1471,7 @@
             normalizedY = scopeOffsetY + scope.clientHeight - maxHeight;
         }
 
-        return { normalizedX, normalizedY };
+        return {normalizedX, normalizedY};
     }
 
     scope.addEventListener("contextmenu", (e) => {
@@ -1456,9 +1481,9 @@
         }
     })
 
-    var openContextMenu = function() {
-        const { clientX: mouseX, clientY: mouseY } = event
-        const { normalizedX, normalizedY } = normalisePosition(mouseX, mouseY, "context")
+    var openContextMenu = function () {
+        const {clientX: mouseX, clientY: mouseY} = event
+        const {normalizedX, normalizedY} = normalisePosition(mouseX, mouseY, "context")
 
         contextMenu.classList.remove("visible")
         contextMenu.style.left = `${normalizedX}px`;
@@ -1508,16 +1533,16 @@
     <!-- User Dialog -->
     const summaryPopout = document.getElementById('summary-popout')
 
-    window.onload = function() {
+    window.onload = function () {
         var author_name = document.getElementsByClassName('chatlog__author-name');
-        var followup_author =document.getElementsByClassName('chatlog__followup-author');
+        var followup_author = document.getElementsByClassName('chatlog__followup-author');
         var followup_avatar = document.getElementsByClassName("chatlog__followup-avatar");
         var avatar = document.getElementsByClassName("chatlog__avatar");
         const element_select = [...author_name, ...followup_author, ...followup_avatar, ...avatar]
 
-        for(var i = 0; i < element_select.length; i++) {
+        for (var i = 0; i < element_select.length; i++) {
             var element = element_select[i];
-            element.onclick = function() {
+            element.onclick = function () {
                 authorID = this.getAttribute("data-user-id");
 
                 if (metaPopout) {
@@ -1532,7 +1557,7 @@
                 const elementX = this.offsetLeft + this.offsetWidth + 10 - subtractX
                 const elementY = this.offsetTop - subtractY
 
-                const { normalizedX, normalizedY } = normalisePosition(elementX, elementY, "user")
+                const {normalizedX, normalizedY} = normalisePosition(elementX, elementY, "user")
 
                 metaPopout.style.left = `${normalizedX}px`;
                 metaPopout.style.top = `${normalizedY}px`;
@@ -1544,7 +1569,7 @@
         }
 
         var summaryButton = document.getElementById('summary-button');
-        summaryButton.onclick = function() {
+        summaryButton.onclick = function () {
             const elementX = this.offsetLeft - 110
             const elementY = this.offsetTop + 30
 
@@ -1573,7 +1598,11 @@
         theme: 'disc',
     });
 
-    {{FANCY_TIME}}
+    {
+        {
+            FANCY_TIME
+        }
+    }
 </script>
 
 </body>

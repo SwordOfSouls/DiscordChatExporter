@@ -1,7 +1,7 @@
 package org.swordofsouls.discord.chatexporter.Serializable.Embed;
 
 import lombok.Getter;
-import org.javacord.api.entity.message.embed.*;
+import org.javacord.api.entity.message.embed.Embed;
 
 import java.awt.*;
 import java.net.URL;
@@ -34,17 +34,19 @@ public class SerializableEmbed {
         url = embed.getUrl();
         timestamp = embed.getTimestamp();
         color = embed.getColor();
-        if(embed.getFooter().isPresent()) footer = Optional.of(new SerializableEmbedFooter(embed.getFooter().get()));
+        if (embed.getFooter().isPresent()) footer = Optional.of(new SerializableEmbedFooter(embed.getFooter().get()));
         else footer = Optional.empty();
-        if(embed.getImage().isPresent()) image = Optional.of(new SerializableEmbedImage(embed.getImage().get()));
+        if (embed.getImage().isPresent()) image = Optional.of(new SerializableEmbedImage(embed.getImage().get()));
         else image = Optional.empty();
-        if(embed.getThumbnail().isPresent()) thumbnail = Optional.of(new SerializableEmbedImage(embed.getThumbnail().get()));
+        if (embed.getThumbnail().isPresent())
+            thumbnail = Optional.of(new SerializableEmbedImage(embed.getThumbnail().get()));
         else thumbnail = Optional.empty();
-        if(embed.getVideo().isPresent()) video = Optional.of(new SerializableEmbedVideo(embed.getVideo().get()));
+        if (embed.getVideo().isPresent()) video = Optional.of(new SerializableEmbedVideo(embed.getVideo().get()));
         else video = Optional.empty();
-        if(embed.getProvider().isPresent()) provider = Optional.of(new SerializableEmbedProvider(embed.getProvider().get()));
+        if (embed.getProvider().isPresent())
+            provider = Optional.of(new SerializableEmbedProvider(embed.getProvider().get()));
         else provider = Optional.empty();
-        if(embed.getAuthor().isPresent()) author = Optional.of(new SerializableEmbedAuthor(embed.getAuthor().get()));
+        if (embed.getAuthor().isPresent()) author = Optional.of(new SerializableEmbedAuthor(embed.getAuthor().get()));
         else author = Optional.empty();
 
         embed.getFields().forEach(embedField -> fields.add(new SerializableEmbedField(embedField)));

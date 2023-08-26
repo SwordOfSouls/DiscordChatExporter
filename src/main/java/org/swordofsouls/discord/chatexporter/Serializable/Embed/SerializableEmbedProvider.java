@@ -2,7 +2,6 @@ package org.swordofsouls.discord.chatexporter.Serializable.Embed;
 
 import lombok.Getter;
 import org.javacord.api.entity.message.embed.EmbedProvider;
-import org.javacord.api.entity.message.embed.EmbedVideo;
 
 import java.net.URL;
 

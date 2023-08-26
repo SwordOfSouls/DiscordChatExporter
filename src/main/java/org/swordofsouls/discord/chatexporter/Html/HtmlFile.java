@@ -13,7 +13,7 @@ public final class HtmlFile {
     }
 
     public HtmlFile replace(String key, String value) {
-        content = content.replaceAll("\\{\\{" + Matcher.quoteReplacement(key.toUpperCase()) + "}}",  Matcher.quoteReplacement(value));
+        content = content.replaceAll("\\{\\{" + Matcher.quoteReplacement(key.toUpperCase()) + "}}", Matcher.quoteReplacement(value));
         return this;
     }
 }

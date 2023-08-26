@@ -19,6 +19,7 @@ public class SerializableEmbedImage {
         height = embedImage.getHeight();
         width = embedImage.getWidth();
     }
+
     public SerializableEmbedImage(EmbedThumbnail embedThumbnail) {
         url = embedThumbnail.getUrl();
         proxyUrl = embedThumbnail.getProxyUrl();

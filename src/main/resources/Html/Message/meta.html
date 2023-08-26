@@ -1,6 +1,6 @@
-<div id="meta-popout-{{USER_ID}}" class="meta-popout">
+<div class="meta-popout" id="meta-popout-{{USER_ID}}">
     <div class="meta__header">
-         <img src="{{USER_AVATAR}}" alt="Avatar">
+        <img alt="Avatar" src="{{USER_AVATAR}}">
     </div>
     <div class="meta__description">
         {{DISPLAY}}
@@ -12,7 +12,10 @@
         <div class="meta__divider-2"></div>
         <div class="meta__field">
             <div class="meta__title">Member Since</div>
-            <div class="meta__value"><img src="{{DISCORD_ICON}}"/> {{CREATED_AT}} <div class="meta__divider"></div> <img src="{{GUILD_ICON}}" class="meta__img-border"/> {{JOINED_AT}}</div>
+            <div class="meta__value"><img src="{{DISCORD_ICON}}"/> {{CREATED_AT}}
+                <div class="meta__divider"></div>
+                <img class="meta__img-border" src="{{GUILD_ICON}}"/> {{JOINED_AT}}
+            </div>
         </div>
         <div class="meta__field">
             <div class="meta__title">Member ID</div>

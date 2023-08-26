@@ -4,14 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.entity.channel.ServerChannel;
-import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.channel.TextChannel;
-import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageSet;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.entity.user.UserFlag;
-import org.javacord.core.entity.message.MessageSetImpl;
 import org.swordofsouls.discord.chatexporter.Html.Builders.BaseBuilder;
 import org.swordofsouls.discord.chatexporter.Html.Builders.Message.MessageBuilder;
 import org.swordofsouls.discord.chatexporter.Html.Builders.Message.MessageGroupBuilder;
@@ -29,8 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
-import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,6 +53,7 @@ public class Transcript {
         MessageSet messageSet = messagePromise.join();
         messageSet.forEach(message -> messages.add(new SerializableMessage(message)));
     }
+
     public Transcript(String title, TextChannel channel, List<SerializableMessage> messages, ZoneId timeZone) {
         this.channel = channel;
         this.title = title;
@@ -68,35 +64,35 @@ public class Transcript {
 
     public String build(DiscordApi discordApi) {
         ServerChannel serverChannel = channel.asServerChannel().get();
-        ServerTextChannel serverTextChannel = serverChannel.asServerTextChannel().get();
         Server server = serverChannel.getServer();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm a");
         BaseBuilder baseBuilder = new BaseBuilder(Html.BASE());
 
         String serverImage;
-        if(server.getIcon().isPresent()) serverImage = server.getIcon().get().getUrl().toString();
+        if (server.getIcon().isPresent()) serverImage = server.getIcon().get().getUrl().toString();
         else serverImage = FileUtils.DEFAULT_AVATAR;
         String serverName = server.getName();
 
         String channelCreation = serverChannel.getCreationTimestamp().atZone(timeZone).format(formatter);
-        String channelTopic = serverTextChannel.getTopic();
 
         baseBuilder.setTitle(title);
         baseBuilder.setFavicon(favicon);
         baseBuilder.setServerName(serverName);
         baseBuilder.setServerId(server.getIdAsString());
         baseBuilder.setServerAvatar(serverImage);
-        baseBuilder.setChannelName(serverTextChannel.getName());
+        baseBuilder.setChannelName(serverChannel.getName());
         baseBuilder.setChannelCreation(channelCreation);
-        baseBuilder.setChannelSubject(channelTopic);
+        serverChannel.asServerTextChannel().ifPresent(serverTextChannel -> {
+            baseBuilder.setChannelSubject(serverTextChannel.getTopic());
+            baseBuilder.setChannelTopic(serverTextChannel.getTopic());
+        });
         baseBuilder.setCreationTime(Instant.now(), timeZone);
-        baseBuilder.setChannelTopic(channelTopic);
-        baseBuilder.setChannelId(serverTextChannel.getIdAsString());
+        baseBuilder.setChannelId(serverChannel.getIdAsString());
         baseBuilder.setOverflow(overflow);
 
-        if(customCss!=null) baseBuilder.setCustomCss(customCss);
-        if(customMedia!=null) baseBuilder.setCustomMediaBlock(customMedia);
-        if(customHeader!=null) baseBuilder.setCustomTop(customHeader);
+        if (customCss != null) baseBuilder.setCustomCss(customCss);
+        if (customMedia != null) baseBuilder.setCustomMediaBlock(customMedia);
+        if (customHeader != null) baseBuilder.setCustomTop(customHeader);
 
         StringBuilder messageContent = new StringBuilder();
         Map<User, Integer> messageUsers = new HashMap<>();
@@ -104,9 +100,9 @@ public class Transcript {
         User last = null;
         MessageGroupBuilder lastBuilder = null;
         for (SerializableMessage message : messages) {
-            if(last == null || (last.getId() != message.getAuthorId())) {
-                if(lastBuilder!=null) messageContent.append(Html.Message.END().getContent());
-                if(message.getAuthorId()==discordApi.getClientId()) last = discordApi.getYourself();
+            if (last == null || (last.getId() != message.getAuthorId())) {
+                if (lastBuilder != null) messageContent.append(Html.Message.END().getContent());
+                if (message.getAuthorId() == discordApi.getClientId()) last = discordApi.getYourself();
                 else last = discordApi.getUserById(message.getAuthorId()).join();
 
                 lastBuilder = new MessageGroupBuilder(Html.Message.START());
@@ -116,20 +112,21 @@ public class Transcript {
                 lastBuilder.setUserName(last.getName());
                 lastBuilder.setEmbeds(message.getEmbeds());
 
-                if(last.isBot()) {
-                    if(last.getUserFlags().contains(UserFlag.VERIFIED_BOT)) lastBuilder.setBot(Html.Message.Bot.TAG_VERIFIED().getContent());
+                if (last.isBot()) {
+                    if (last.getUserFlags().contains(UserFlag.VERIFIED_BOT))
+                        lastBuilder.setBot(Html.Message.Bot.TAG_VERIFIED().getContent());
                     else lastBuilder.setBot(Html.Message.Bot.TAG().getContent());
-                }
-                else lastBuilder.setBot("");
+                } else lastBuilder.setBot("");
 
-                if(last.getRoleColor(server).isPresent()) lastBuilder.setUserColor(last.getRoleColor(server).get());
+                if (last.getRoleColor(server).isPresent()) lastBuilder.setUserColor(last.getRoleColor(server).get());
 
                 lastBuilder.setContent(message.getContent());
                 lastBuilder.setTimestamp(message.getCreationStamp(), timeZone);
                 lastBuilder.setComponents(message.getComponents());
                 lastBuilder.setAttachments(message.getAttachments());
 
-                if(message.getLastEditStamp().isPresent()) lastBuilder.setEditedTimestamp(message.getLastEditStamp().get(), timeZone);
+                if (message.getLastEditStamp().isPresent())
+                    lastBuilder.setEditedTimestamp(message.getLastEditStamp().get(), timeZone);
 
                 messageContent.append(lastBuilder.build().getContent());
             } else {
@@ -142,13 +139,14 @@ public class Transcript {
                 messageBuilder.setComponents(message.getComponents());
                 messageBuilder.setAttachments(message.getAttachments());
 
-                if(message.getLastEditStamp().isPresent()) messageBuilder.setEditedTimestamp(message.getLastEditStamp().get(), timeZone);
+                if (message.getLastEditStamp().isPresent())
+                    messageBuilder.setEditedTimestamp(message.getLastEditStamp().get(), timeZone);
 
                 messageContent.append(messageBuilder.build().getContent());
             }
 
 
-            if(messageUsers.containsKey(last)) messageUsers.put(last, messageUsers.get(last)+1);
+            if (messageUsers.containsKey(last)) messageUsers.put(last, messageUsers.get(last) + 1);
             else messageUsers.put(last, 1);
         }
         baseBuilder.setMessageCount(messages.size());
@@ -156,10 +154,11 @@ public class Transcript {
         baseBuilder.setMessages(messageContent.toString());
 
         StringBuilder metaContentBuilder = new StringBuilder();
-        for(User user : messageUsers.keySet()) {
+        for (User user : messageUsers.keySet()) {
             MetaBuilder metaBuilder = new MetaBuilder(Html.Message.META());
-            if(user.isBot()) {
-                if(user.getUserFlags().contains(UserFlag.VERIFIED_BOT)) metaBuilder.setBotTag(Html.Message.Bot.TAG_VERIFIED().getContent());
+            if (user.isBot()) {
+                if (user.getUserFlags().contains(UserFlag.VERIFIED_BOT))
+                    metaBuilder.setBotTag(Html.Message.Bot.TAG_VERIFIED().getContent());
                 else metaBuilder.setBotTag(Html.Message.Bot.TAG().getContent());
             }
             metaBuilder.setUserId(user.getId());
@@ -167,7 +166,7 @@ public class Transcript {
             metaBuilder.setUserDiscrim("#" + user.getDiscriminator());
             metaBuilder.setUserName(user.getName());
             metaBuilder.setUserCreation(TimeUtils.getFormattedTime(user.getCreationTimestamp(), timeZone));
-            if(server.getJoinedAtTimestamp(user).isPresent())
+            if (server.getJoinedAtTimestamp(user).isPresent())
                 metaBuilder.setUserJoin(TimeUtils.getFormattedTime(server.getJoinedAtTimestamp(user).get(), timeZone));
             else metaBuilder.setUserJoin("");
             metaBuilder.setServerAvatar(serverImage);
@@ -183,7 +182,7 @@ public class Transcript {
         patterns.put(pattern, "<img class=\"emoji emoji--small\" src=\"https://cdn.discordapp.com/emojis/%s.png\">");
         Matcher matcher = pattern.matcher(content);
 
-        while(matcher.find()) {
+        while (matcher.find()) {
             content = matcher.replaceAll((matchResult -> {
                 String emojiId = matchResult.group(1);
                 return String.format(patterns.get(pattern), emojiId);

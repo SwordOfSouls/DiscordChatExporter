@@ -7,7 +7,7 @@ import java.awt.*;
 public class ButtonStyleUtils {
     public static Color buttonStyle(ButtonStyle style, boolean disabled) {
         Color color = null;
-        if(!disabled) {
+        if (!disabled) {
             switch (style) {
                 case PRIMARY:
                     color = new Color(88, 101, 242);
