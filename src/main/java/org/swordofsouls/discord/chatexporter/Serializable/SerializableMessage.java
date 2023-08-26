@@ -7,10 +7,7 @@ import org.javacord.api.entity.Attachment;
 import org.javacord.api.entity.Icon;
 import org.javacord.api.entity.Mentionable;
 import org.javacord.api.entity.channel.TextChannel;
-import org.javacord.api.entity.message.Message;
-import org.javacord.api.entity.message.MessageAttachment;
-import org.javacord.api.entity.message.MessageDecoration;
-import org.javacord.api.entity.message.Messageable;
+import org.javacord.api.entity.message.*;
 import org.javacord.api.entity.message.component.*;
 import org.javacord.api.entity.message.embed.Embed;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
@@ -18,6 +15,7 @@ import org.javacord.api.entity.message.internal.MessageBuilderBaseDelegate;
 import org.javacord.api.entity.message.mention.AllowedMentions;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.entity.webhook.IncomingWebhook;
+import org.javacord.core.entity.message.embed.EmbedImpl;
 import org.javacord.core.util.FileContainer;
 import org.javacord.core.util.logging.LoggerUtil;
 import org.swordofsouls.discord.chatexporter.Serializable.Embed.SerializableEmbed;
@@ -41,7 +39,7 @@ public class SerializableMessage {
     protected boolean tts = false;
     protected Optional<String> nonce;
     protected final List<SerializableAttachment> attachments = new ArrayList<>();
-    protected final List<HighLevelComponent> components = new ArrayList<>();
+    protected final List<SerializableHighLevelComponent> components = new ArrayList<>();
     protected Set<Long> stickerIds = new HashSet<>();
 
     public SerializableMessage(Message message) {
@@ -54,7 +52,7 @@ public class SerializableMessage {
             if (component.getType() == ComponentType.ACTION_ROW) {
                 ActionRowBuilder builder = new ActionRowBuilder();
                 builder.copy((ActionRow) component);
-                this.components.add(builder.build());
+                this.components.add(new SerializableHighLevelComponent(builder.build()));
             }
         }
 

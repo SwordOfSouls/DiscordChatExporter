@@ -18,6 +18,7 @@ import org.swordofsouls.discord.chatexporter.Serializable.Embed.SerializableEmbe
 import org.swordofsouls.discord.chatexporter.Serializable.Embed.SerializableEmbedField;
 import org.swordofsouls.discord.chatexporter.Serializable.Embed.SerializableEmbedFooter;
 import org.swordofsouls.discord.chatexporter.Serializable.SerializableAttachment;
+import org.swordofsouls.discord.chatexporter.Serializable.SerializableHighLevelComponent;
 import org.swordofsouls.discord.chatexporter.Utils.Color.ButtonStyleUtils;
 import org.swordofsouls.discord.chatexporter.Utils.File.FileUtils;
 import org.swordofsouls.discord.chatexporter.Utils.Time.TimeUtils;
@@ -124,27 +125,24 @@ public class MessageCore extends HtmlBase {
         }
         file.replace("EMBEDS", embedStringBuilder.toString());
     }
-    public void setComponents(List<HighLevelComponent> components) {
+    public void setComponents(List<SerializableHighLevelComponent> components) {
         StringBuilder componentStringBuilder = new StringBuilder();
-        for(HighLevelComponent component : components) {
-            if(component.asActionRow().isPresent()) {
-                ActionRow row = component.asActionRow().get();
-                for(LowLevelComponent lowLevelComponent : row.getComponents()) {
-                    if(lowLevelComponent.isButton() && lowLevelComponent.asButton().isPresent()) {
-                        Button button = lowLevelComponent.asButton().get();
-                        ButtonBuilder buttonBuilder = new ButtonBuilder(Html.Component.BUTTON());
-                        boolean disabled;
-                        if(button.isDisabled().isPresent()) disabled = button.isDisabled().get();
-                        else disabled = false;
-                        buttonBuilder.setColor(ButtonStyleUtils.buttonStyle(button.getStyle(), disabled));
-                        buttonBuilder.setDisabled(disabled);
-                        if(button.getLabel().isPresent()) buttonBuilder.setLabel(button.getLabel().get());
-                        if(button.getUrl().isPresent()) buttonBuilder.setUrl(button.getUrl().get());
-                        if(button.getEmoji().isPresent()) {
-                            if(button.getEmoji().get().asUnicodeEmoji().isPresent()) buttonBuilder.setEmoji(button.getEmoji().get().asUnicodeEmoji().get());
-                        }
-                        componentStringBuilder.append(buttonBuilder.build().getContent());
+        for(SerializableHighLevelComponent component : components) {
+            for(LowLevelComponent lowLevelComponent : component.convert()) {
+                if(lowLevelComponent.isButton() && lowLevelComponent.asButton().isPresent()) {
+                    Button button = lowLevelComponent.asButton().get();
+                    ButtonBuilder buttonBuilder = new ButtonBuilder(Html.Component.BUTTON());
+                    boolean disabled;
+                    if(button.isDisabled().isPresent()) disabled = button.isDisabled().get();
+                    else disabled = false;
+                    buttonBuilder.setColor(ButtonStyleUtils.buttonStyle(button.getStyle(), disabled));
+                    buttonBuilder.setDisabled(disabled);
+                    if(button.getLabel().isPresent()) buttonBuilder.setLabel(button.getLabel().get());
+                    if(button.getUrl().isPresent()) buttonBuilder.setUrl(button.getUrl().get());
+                    if(button.getEmoji().isPresent()) {
+                        if(button.getEmoji().get().asUnicodeEmoji().isPresent()) buttonBuilder.setEmoji(button.getEmoji().get().asUnicodeEmoji().get());
                     }
+                    componentStringBuilder.append(buttonBuilder.build().getContent());
                 }
             }
         }
