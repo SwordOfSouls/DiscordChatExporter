@@ -13,6 +13,10 @@ import org.swordofsouls.discord.chatexporter.Html.Builders.Components.ButtonBuil
 import org.swordofsouls.discord.chatexporter.Html.Builders.HtmlBase;
 import org.swordofsouls.discord.chatexporter.Html.Html;
 import org.swordofsouls.discord.chatexporter.Html.HtmlFile;
+import org.swordofsouls.discord.chatexporter.Serializable.Embed.SerializableEmbed;
+import org.swordofsouls.discord.chatexporter.Serializable.Embed.SerializableEmbedAuthor;
+import org.swordofsouls.discord.chatexporter.Serializable.Embed.SerializableEmbedField;
+import org.swordofsouls.discord.chatexporter.Serializable.Embed.SerializableEmbedFooter;
 import org.swordofsouls.discord.chatexporter.Serializable.SerializableAttachment;
 import org.swordofsouls.discord.chatexporter.Utils.Color.ButtonStyleUtils;
 import org.swordofsouls.discord.chatexporter.Utils.File.FileUtils;
@@ -42,9 +46,9 @@ public class MessageCore extends HtmlBase {
         messageContentLineF.replace("MESSAGE_CONTENT", content);
         file.replace("MESSAGE_CONTENT", messageContentLineF.getContent());
     }
-    public void setEmbeds(List<Embed> embeds) {
+    public void setEmbeds(List<SerializableEmbed> embeds) {
         StringBuilder embedStringBuilder = new StringBuilder();
-        for(Embed embed : embeds) {
+        for(SerializableEmbed embed : embeds) {
             HtmlFile embedF = Html.Embed.BODY();
             if(embed.getColor().isPresent()) {
                 embedF.replace("EMBED_R", String.valueOf(embed.getColor().get().getRed()));
@@ -56,7 +60,7 @@ public class MessageCore extends HtmlBase {
                 embedF.replace("EMBED_B", "40");
             }
             if (embed.getAuthor().isPresent()) {
-                EmbedAuthor author = embed.getAuthor().get();
+                SerializableEmbedAuthor author = embed.getAuthor().get();
                 if(!author.getIconUrl().isPresent()) {
                     HtmlFile embedAuthorF = Html.Embed.AUTHOR();
                     embedAuthorF.replace("AUTHOR", author.getName());
@@ -80,7 +84,7 @@ public class MessageCore extends HtmlBase {
             } else embedF.replace("EMBED_DESC", "");
 
             StringBuilder embedsBuilder = new StringBuilder();
-            for (EmbedField embedField : embed.getFields()) {
+            for (SerializableEmbedField embedField : embed.getFields()) {
                 HtmlFile embedFieldF;
                 if (embedField.isInline()) embedFieldF = Html.Embed.FIELD_INLINE();
                 else embedFieldF = Html.Embed.FIELD();
@@ -100,7 +104,7 @@ public class MessageCore extends HtmlBase {
             else embedF.replace("EMBED_THUMBNAIL", "");
 
             if (embed.getFooter().isPresent()) {
-                EmbedFooter footer = embed.getFooter().get();
+                SerializableEmbedFooter footer = embed.getFooter().get();
                 HtmlFile footerF;
 
                 if (footer.getIconUrl().isPresent()) {

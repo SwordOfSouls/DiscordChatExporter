@@ -20,6 +20,7 @@ import org.javacord.api.entity.user.User;
 import org.javacord.api.entity.webhook.IncomingWebhook;
 import org.javacord.core.util.FileContainer;
 import org.javacord.core.util.logging.LoggerUtil;
+import org.swordofsouls.discord.chatexporter.Serializable.Embed.SerializableEmbed;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -34,17 +35,18 @@ public class SerializableMessage {
     protected String content;
     protected long messageId;
     protected long authorId;
-    protected SerializableInstant creationStamp;
-    protected SerializableOptional<SerializableInstant> lastEditStamp;
-    protected List<Embed> embeds = new ArrayList<>();
+    protected Instant creationStamp;
+    protected Optional<Instant> lastEditStamp;
+    protected List<SerializableEmbed> embeds = new ArrayList<>();
     protected boolean tts = false;
-    protected SerializableOptional<String> nonce;
+    protected Optional<String> nonce;
     protected final List<SerializableAttachment> attachments = new ArrayList<>();
     protected final List<HighLevelComponent> components = new ArrayList<>();
     protected Set<Long> stickerIds = new HashSet<>();
 
     public SerializableMessage(Message message) {
         message.getStickerItems().forEach(stickerItem -> stickerIds.add(stickerItem.getId()));
+        message.getEmbeds().forEach(embed -> embeds.add(new SerializableEmbed(embed)));
 
         for(MessageAttachment messageAttachment : message.getAttachments()) this.attachments.add(new SerializableAttachment(messageAttachment));
 
@@ -56,14 +58,13 @@ public class SerializableMessage {
             }
         }
 
-        this.embeds.addAll(message.getEmbeds());
         this.tts = message.isTts();
-        this.nonce = new SerializableOptional<>(message.getNonce());
+        this.nonce = message.getNonce();
         this.content = message.getContent();
         this.messageId = message.getId();
         this.authorId = message.getUserAuthor().get().getId();
-        this.creationStamp = new SerializableInstant(message.getCreationTimestamp());
-        if(message.getLastEditTimestamp().isPresent()) this.lastEditStamp = new SerializableOptional<>(Optional.of(new SerializableInstant(message.getLastEditTimestamp().get())));
-        else this.lastEditStamp = SerializableOptional.empty();
+        this.creationStamp = message.getCreationTimestamp();
+        if(message.getLastEditTimestamp().isPresent()) this.lastEditStamp = Optional.of((message.getLastEditTimestamp().get()));
+        else this.lastEditStamp = Optional.empty();
     }
 }
