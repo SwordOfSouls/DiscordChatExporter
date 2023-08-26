@@ -82,7 +82,7 @@ public class Transcript {
         baseBuilder.setServerAvatar(serverImage);
         baseBuilder.setChannelName(serverChannel.getName());
         baseBuilder.setChannelCreation(channelCreation);
-        serverChannel.asServerTextChannel().ifPresentOrElse((serverTextChannel -> {
+        channel.asServerTextChannel().ifPresentOrElse((serverTextChannel -> {
             baseBuilder.setChannelSubject(serverTextChannel.getTopic());
             baseBuilder.setChannelTopic(serverTextChannel.getTopic());
         }), () -> {
