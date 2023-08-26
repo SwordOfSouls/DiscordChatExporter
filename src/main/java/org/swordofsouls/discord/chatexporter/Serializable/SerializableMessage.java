@@ -34,8 +34,8 @@ public class SerializableMessage {
     protected String content;
     protected long messageId;
     protected long authorId;
-    protected Instant creationStamp;
-    protected Optional<Instant> lastEditStamp;
+    protected SerializableInstant creationStamp;
+    protected Optional<SerializableInstant> lastEditStamp;
     protected List<Embed> embeds = new ArrayList<>();
     protected boolean tts = false;
     protected Optional<String> nonce;
@@ -62,7 +62,8 @@ public class SerializableMessage {
         this.content = message.getContent();
         this.messageId = message.getId();
         this.authorId = message.getUserAuthor().get().getId();
-        this.creationStamp = message.getCreationTimestamp();
-        this.lastEditStamp = message.getLastEditTimestamp();
+        this.creationStamp = new SerializableInstant(message.getCreationTimestamp());
+        if(message.getLastEditTimestamp().isPresent()) this.lastEditStamp = Optional.of(new SerializableInstant(message.getLastEditTimestamp().get()));
+        else this.lastEditStamp = Optional.empty();
     }
 }

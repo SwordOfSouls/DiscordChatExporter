@@ -124,11 +124,11 @@ public class Transcript {
                 if(last.getRoleColor(server).isPresent()) lastBuilder.setUserColor(last.getRoleColor(server).get());
 
                 lastBuilder.setContent(message.getContent());
-                lastBuilder.setTimestamp(message.getCreationStamp(), timeZone);
+                lastBuilder.setTimestamp(message.getCreationStamp().back(), timeZone);
                 lastBuilder.setComponents(message.getComponents());
                 lastBuilder.setAttachments(message.getAttachments());
 
-                if(message.getLastEditStamp().isPresent()) lastBuilder.setEditedTimestamp(message.getLastEditStamp().get(), timeZone);
+                if(message.getLastEditStamp().isPresent()) lastBuilder.setEditedTimestamp(message.getLastEditStamp().get().back(), timeZone);
 
                 messageContent.append(lastBuilder.build().getContent());
             } else {
@@ -136,12 +136,12 @@ public class Transcript {
                 MessageBuilder messageBuilder = new MessageBuilder(Html.Message.MESSAGE());
                 messageBuilder.setContent(message.getContent());
                 messageBuilder.setMessageId(message.getMessageId());
-                messageBuilder.setTimestamp(message.getCreationStamp(), timeZone);
+                messageBuilder.setTimestamp(message.getCreationStamp().back(), timeZone);
                 messageBuilder.setEmbeds(message.getEmbeds());
                 messageBuilder.setComponents(message.getComponents());
                 messageBuilder.setAttachments(message.getAttachments());
 
-                if(message.getLastEditStamp().isPresent()) messageBuilder.setEditedTimestamp(message.getLastEditStamp().get(), timeZone);
+                if(message.getLastEditStamp().isPresent()) messageBuilder.setEditedTimestamp(message.getLastEditStamp().get().back(), timeZone);
 
                 messageContent.append(messageBuilder.build().getContent());
             }
