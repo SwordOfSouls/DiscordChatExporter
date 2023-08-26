@@ -60,7 +60,7 @@ public class SerializableMessage {
         this.nonce = message.getNonce();
         this.content = message.getContent();
         this.messageId = message.getId();
-        this.authorId = message.getUserAuthor().get().getId();
+        this.authorId = message.getAuthor().getId();
         this.creationStamp = message.getCreationTimestamp();
         if(message.getLastEditTimestamp().isPresent()) this.lastEditStamp = Optional.of((message.getLastEditTimestamp().get()));
         else this.lastEditStamp = Optional.empty();

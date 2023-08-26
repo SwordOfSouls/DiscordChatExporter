@@ -106,7 +106,8 @@ public class Transcript {
         for (SerializableMessage message : messages) {
             if(last == null || (last.getId() != message.getAuthorId())) {
                 if(lastBuilder!=null) messageContent.append(Html.Message.END().getContent());
-                last = discordApi.getUserById(message.getAuthorId()).join();
+                if(message.getAuthorId()==discordApi.getClientId()) last = discordApi.getYourself();
+                else last = discordApi.getUserById(message.getAuthorId()).join();
 
                 lastBuilder = new MessageGroupBuilder(Html.Message.START());
                 lastBuilder.setAvatar(last.getAvatar().getUrl().toString());
